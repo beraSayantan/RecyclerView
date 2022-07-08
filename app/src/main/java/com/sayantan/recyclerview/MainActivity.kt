@@ -4,11 +4,17 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.sayantan.recyclerview.databinding.ActivityMainBinding
+
+private lateinit var binding: ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+
 
         var todoList = mutableListOf(
             Todo("Todo 1",false),
@@ -19,10 +25,13 @@ class MainActivity : AppCompatActivity() {
 
         val adapter = TodoAdapter(todoList)
 
-        //rvTodos.adapter = adapter
-        //rvTodos.layoutManager = LinearLayoutManager(this)
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        binding.rvTodos
-
+        binding.rvTodos.adapter = adapter
+        binding.rvTodos.layoutManager = LinearLayoutManager(this)
+        binding.btnAddTodo.setOnClickListener{
+            val title = binding.etTodo.text.toString()
+            val todo = Todo(title,false)
+            todoList.add(todo)
+            adapter.notifyItemInserted(todoList.size-1)
+        }
     }
 }
